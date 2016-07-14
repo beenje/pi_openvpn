@@ -1,0 +1,22 @@
+---
+openvpn_server: example.org
+openvpn_port: 1194
+openvpn_protocol: udp
+
+openvpn_dh: /path/to/dh.pem
+
+user: pi
+easyrsa_version: EasyRSA-3.0.1
+easyrsa_url: https://github.com/OpenVPN/easy-rsa/releases/download/3.0.1/{{easyrsa_version}}.tgz
+clientside: /home/{{user}}/openvpn/clientside
+serverside: /home/{{user}}/openvpn/serverside
+easyrsa_client: "{{clientside}}/{{easyrsa_version}}"
+easyrsa_server: "{{serverside}}/{{easyrsa_version}}"
+
+openvpn_clients:
+  - client1
+
+private_subnets: []
+dns_servers:
+  - 8.8.8.8
+  - 8.8.4.4

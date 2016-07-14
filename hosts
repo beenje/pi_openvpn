@@ -1,0 +1,2 @@
+[openvpn]
+raspberry ansible_ssh_user=pi ansible_become=True

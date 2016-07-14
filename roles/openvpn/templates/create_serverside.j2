@@ -1,0 +1,23 @@
+#!/bin/bash
+
+
+function create_server_keys {
+  cd {{serverside}}
+  tar xfz ../{{easyrsa_version}}.tgz
+
+  cd {{easyrsa_version}}
+  ./easyrsa init-pki
+  echo "Build CA"
+  ./easyrsa --batch --dn-mode=cn_only --req-cn="{{ansible_hostname}} CA" build-ca nopass
+  cp {{easyrsa_server}}/pki/ca.crt {{clientside}}/keys/
+  echo "Generate and sign server keypair"
+  ./easyrsa --batch build-server-full {{ansible_hostname}} nopass
+#  echo "build the Diffie-Hellman key"
+#  ./easyrsa gen-dh
+  echo "build the static key for OpenVPN-HMAC"
+  /usr/sbin/openvpn --genkey --secret ta.key
+  cp {{easyrsa_server}}/ta.key {{clientside}}/keys/
+}
+
+
+create_server_keys

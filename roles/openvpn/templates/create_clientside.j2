@@ -1,0 +1,48 @@
+#!/bin/bash
+
+
+function init_clientside {
+  cd {{clientside}}
+  tar xfz ../{{easyrsa_version}}.tgz
+  mkdir -p files
+
+  cd {{easyrsa_version}}
+  ./easyrsa init-pki
+}
+
+
+function create_ovpn {
+  typeset client=$1
+
+  cd {{clientside}}
+  cat client.conf \
+      <(echo -e '<ca>') \
+      keys/ca.crt \
+      <(echo -e '</ca>\n<cert>') \
+      <(sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' keys/${1}.crt) \
+      <(echo -e '</cert>\n<key>') \
+      keys/${1}.key \
+      <(echo -e '</key>\n<tls-auth>') \
+      <(sed -ne '/-BEGIN OpenVPN Static key V1-/,/-END OpenVPN Static key V1-/p' keys/ta.key) \
+      <(echo -e '</tls-auth>') \
+      > files/${1}.ovpn
+}
+
+
+function create_client {
+  typeset client=$1
+
+  cd {{easyrsa_client}}
+  ./easyrsa --batch --req-cn="${client}" gen-req ${client} nopass
+  cp {{easyrsa_client}}/pki/private/${client}.key {{clientside}}/keys/
+  cd {{easyrsa_server}}
+  ./easyrsa import-req {{easyrsa_client}}/pki/reqs/${client}.req ${client}
+  ./easyrsa --batch sign-req client ${client}
+  cp {{easyrsa_server}}/pki/issued/${client}.crt {{clientside}}/keys/
+
+  create_ovpn $client
+}
+
+
+[ ! -d {{easyrsa_client}}/pki ] && init_clientside
+create_client $1

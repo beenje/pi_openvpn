@@ -1,0 +1,10 @@
+---
+openvpn_server: my.raspberry.example.org
+openvpn_clients:
+  - client1
+  - client2
+
+private_subnets:
+  - 192.168.10.0 255.255.255.0
+
+openvpn_dh: /path/to/dh.pem
