@@ -23,10 +23,20 @@ Quick instructions
 
 4. The generated key is *EasyRSA-3.0.1/pki/dh.pem*
 
-5. Update the variables in host_vars/raspberry:
+5. Update the variables in host_vars/raspberry. You should at least define::
 
-   .. include:: host_vars/raspberry
-      :code:
+    # Static Internet hostname
+    openvpn_server: my.raspberry.example.org
+    # List of client configurations to create
+    openvpn_clients:
+      - client1
+      - client2
+    # List of subnets behind the server you want to access
+    # You probably want to put your internal LAN
+    private_subnets:
+      - 192.168.10.0 255.255.255.0
+    # Full path of the Diffie-Hellman key generated locally
+    openvpn_dh: /path/to/dh.pem
 
 6. Run the playbook::
 
@@ -40,6 +50,3 @@ Quick instructions
    Even the CA is created with no password. Anyone accessing it could
    sign new requests! You can copy the openvpn directory to a USB stick
    before to remove it.
-
-
-
