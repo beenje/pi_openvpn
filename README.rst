@@ -13,17 +13,7 @@ Quick instructions
 
    $ git clone git@github.com:beenje/pi_openvpn.git
 
-3. Build the Diffie-Hellman key::
-
-   $ wget https://github.com/OpenVPN/easy-rsa/releases/download/3.0.1/EasyRSA-3.0.1.tgz
-   $ tar xfz EasyRSA-3.0.1.tgz
-   $ cd EasyRSA-3.0.1
-   $ ./easyrsa init-pki
-   $ ./easyrsa gen-dh
-
-4. The generated key is *EasyRSA-3.0.1/pki/dh.pem*
-
-5. Update the variables in host_vars/raspberry. You should at least define::
+3. Update the variables in host_vars/raspberry. You should at least define::
 
     # Static Internet hostname
     openvpn_server: my.raspberry.example.org
@@ -35,18 +25,16 @@ Quick instructions
     # You probably want to put your internal LAN
     private_subnets:
       - 192.168.10.0 255.255.255.0
-    # Full path of the Diffie-Hellman key generated locally
-    openvpn_dh: /path/to/dh.pem
 
-6. Run the playbook::
+4. Run the playbook::
 
    $ ansible-playbook -i hosts openvpn.yml
 
-7. Get the clients configuration files from the Raspberry Pi::
+5. Get the clients configuration files from the Raspberry Pi::
 
    $ scp pi@raspberry:openvpn/clientside/files/*.ovpn .
 
-8. Don't leave all the generated keys on your Pi!
+6. Don't leave all the generated keys on your Pi!
    Even the CA is created with no password. Anyone accessing it could
    sign new requests! You can copy the openvpn directory to a USB stick
    before to remove it.

@@ -91,20 +91,14 @@
   with_items:
     - name: "ca.crt"
       path: "{{easyrsa_server}}/pki"
+    - name: "dh.pem"
+      path: "{{easyrsa_server}}/pki"
     - name: "{{ansible_hostname}}.crt"
       path: "{{easyrsa_server}}/pki/issued"
     - name: "{{ansible_hostname}}.key"
       path: "{{easyrsa_server}}/pki/private"
     - name: "ta.key"
       path: "{{easyrsa_server}}"
-
-- name: copy Diffie-Hellman key
-  copy:
-    src: "{{openvpn_dh}}"
-    dest: /etc/openvpn/keys/dh.pem
-    owner: root
-    group: root
-    mode: 0600
 
 - name: create openvpn server.conf
   template:

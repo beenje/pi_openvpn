@@ -4,7 +4,6 @@ ansible:
   group_vars:
     openvpn:
       user: vagrant
-      openvpn_dh: ./tests/dh_do_not_use.pem
 driver:
   name: vagrant
 vagrant:
