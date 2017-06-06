@@ -1,16 +1,26 @@
 ---
 - name: install dependencies
-  apt: name={{item}} state=present update_cache=yes cache_valid_time=3600
+  apt:
+    name: "{{item}}"
+    state: present
+    update_cache: yes
+    cache_valid_time: 3600
   with_items:
     - ufw
     - host
 
 - name: update ufw default forward policy
-  lineinfile: dest=/etc/default/ufw regexp=^DEFAULT_FORWARD_POLICY line=DEFAULT_FORWARD_POLICY="ACCEPT"
+  lineinfile:
+    dest: /etc/default/ufw
+    regexp: "^DEFAULT_FORWARD_POLICY"
+    line: DEFAULT_FORWARD_POLICY="ACCEPT"
   notify: reload ufw
 
 - name: enable ufw ip forward
-  lineinfile: dest=/etc/ufw/sysctl.conf regexp=^net/ipv4/ip_forward line=net/ipv4/ip_forward=1
+  lineinfile:
+    dest: /etc/ufw/sysctl.conf
+    regexp: ^net/ipv4/ip_forward
+    line: net/ipv4/ip_forward=1
   notify: reload ufw
 
 - name: add NAT rules to ufw
@@ -31,10 +41,18 @@
   notify: reload ufw
 
 - name: allow ssh
-  ufw: rule=limit port=ssh proto=tcp
+  ufw:
+    rule: limit
+    port: ssh
+    proto: tcp
 
 - name: allow openvpn
-  ufw: rule=allow port={{openvpn_port}} proto={{openvpn_protocol}}
+  ufw:
+    rule: allow
+    port: "{{openvpn_port}}"
+    proto: "{{openvpn_protocol}}"
 
 - name: enable ufw
-  ufw: logging=on state=enabled
+  ufw:
+    logging: on
+    state: enabled
