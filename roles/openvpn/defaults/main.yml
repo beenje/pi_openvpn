@@ -6,12 +6,13 @@ openvpn_protocol: udp
 openvpn_dh: /path/to/dh.pem
 
 user: pi
-easyrsa_version: EasyRSA-3.0.1
-easyrsa_url: https://github.com/OpenVPN/easy-rsa/releases/download/3.0.1/{{easyrsa_version}}.tgz
-clientside: /home/{{user}}/openvpn/clientside
-serverside: /home/{{user}}/openvpn/serverside
-easyrsa_client: "{{clientside}}/{{easyrsa_version}}"
-easyrsa_server: "{{serverside}}/{{easyrsa_version}}"
+easyrsa_directory: EasyRSA-v3.0.6
+easyrsa_archive: EasyRSA-unix-v3.0.6.tgz
+easyrsa_url: https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.6/{{ easyrsa_archive }}
+clientside: /home/{{ user }}/openvpn/clientside
+serverside: /home/{{ user }}/openvpn/serverside
+easyrsa_client: "{{ clientside }}/{{ easyrsa_directory }}"
+easyrsa_server: "{{ serverside }}/{{ easyrsa_directory }}"
 
 openvpn_clients:
   - client1

@@ -3,9 +3,9 @@
 
 function create_server_keys {
   cd {{serverside}}
-  tar xfz ../{{easyrsa_version}}.tgz
+  tar xfz ../{{easyrsa_archive}}
 
-  cd {{easyrsa_version}}
+  cd {{easyrsa_directory}}
   ./easyrsa init-pki
   echo "Build CA"
   ./easyrsa --batch --dn-mode=cn_only --req-cn="{{ansible_hostname}} CA" build-ca nopass

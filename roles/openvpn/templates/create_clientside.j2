@@ -3,10 +3,10 @@
 
 function init_clientside {
   cd {{clientside}}
-  tar xfz ../{{easyrsa_version}}.tgz
+  tar xfz ../{{easyrsa_archive}}
   mkdir -p files
 
-  cd {{easyrsa_version}}
+  cd {{easyrsa_directory}}
   ./easyrsa init-pki
 }
 

@@ -5,3 +5,5 @@
 .cache
 __pycache__
 *.pyc
+EasyRSA-v3.0.6
+.vscode

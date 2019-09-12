@@ -15,13 +15,13 @@ Quick instructions
 
 3. Build the Diffie-Hellman key::
 
-   $ wget https://github.com/OpenVPN/easy-rsa/releases/download/3.0.1/EasyRSA-3.0.1.tgz
-   $ tar xfz EasyRSA-3.0.1.tgz
-   $ cd EasyRSA-3.0.1
+   $ wget https://github.com/OpenVPN/easy-rsa/releases/download/v3.0.6/EasyRSA-unix-v3.0.6.tgz
+   $ tar xfz EasyRSA-unix-v3.0.6.tgz
+   $ cd EasyRSA-v3.0.6
    $ ./easyrsa init-pki
    $ ./easyrsa gen-dh
 
-4. The generated key is *EasyRSA-3.0.1/pki/dh.pem*
+4. The generated key is *EasyRSA-v3.0.6/pki/dh.pem*
 
 5. Update the variables in host_vars/raspberry. You should at least define::
 
