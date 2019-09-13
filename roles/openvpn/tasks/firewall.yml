@@ -5,7 +5,7 @@
       - ufw
       - host
     state: present
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 3600
 
 - name: update ufw default forward policy
@@ -33,7 +33,7 @@
 
       # Nat rules
       -F
-      -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j SNAT --to-source {{ansible_eth0.ipv4.address}}
+      -A POSTROUTING -s 10.8.0.0/24 -o eth0 -j SNAT --to-source {{ ansible_eth0.ipv4.address }}
 
       # don't delete the 'COMMIT' line or these nat rules won't be processed
       COMMIT
@@ -48,10 +48,10 @@
 - name: allow openvpn
   ufw:
     rule: allow
-    port: "{{openvpn_port}}"
-    proto: "{{openvpn_protocol}}"
+    port: "{{ openvpn_port }}"
+    proto: "{{ openvpn_protocol }}"
 
 - name: enable ufw
   ufw:
-    logging: on
+    logging: "on"
     state: enabled

@@ -3,7 +3,7 @@
 
 - name: apt-get update
   apt:
-    update_cache: yes
+    update_cache: true
     cache_valid_time: 3600
 
 - name: install openvpn
@@ -29,38 +29,38 @@
 
 - name: create clientside and serverside directories
   file:
-    path: "{{item}}"
+    path: "{{ item }}"
     state: directory
     mode: 0755
-  with_items:
-    - "{{clientside}}/keys"
-    - "{{serverside}}"
+  loop:
+    - "{{ clientside }}/keys"
+    - "{{ serverside }}"
   become: true
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
 
 - name: create openvpn base client.conf
   template:
     src: client.conf.j2
-    dest: "{{clientside}}/client.conf"
+    dest: "{{ clientside }}/client.conf"
     owner: root
     group: root
     mode: 0644
 
 - name: download EasyRSA
   get_url:
-    url: "{{easyrsa_url}}"
-    dest: "/home/{{user}}/openvpn"
+    url: "{{ easyrsa_url }}"
+    dest: "/home/{{ user }}/openvpn"
   become: true
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
 
 - name: create scripts
   template:
-    src: "{{item}}.j2"
-    dest: "/home/{{user}}/openvpn/{{item}}"
+    src: "{{ item }}.j2"
+    dest: "/home/{{ user }}/openvpn/{{ item }}"
     owner: root
     group: root
     mode: 0755
-  with_items:
+  loop:
     - create_serverside
     - create_clientside
   tags: client
@@ -68,39 +68,39 @@
 - name: run serverside script
   command: ./create_serverside
   args:
-    chdir: "/home/{{user}}/openvpn"
-    creates: "{{easyrsa_server}}/ta.key"
+    chdir: "/home/{{ user }}/openvpn"
+    creates: "{{ easyrsa_server }}/ta.key"
   become: true
-  become_user: "{{user}}"
+  become_user: "{{ user }}"
 
 - name: run clientside script
-  command: ./create_clientside {{item}}
+  command: ./create_clientside {{ item }}
   args:
-    chdir: "/home/{{user}}/openvpn"
-    creates: "{{clientside}}/files/{{item}}.ovpn"
+    chdir: "/home/{{ user }}/openvpn"
+    creates: "{{ clientside }}/files/{{ item }}.ovpn"
   become: true
-  become_user: "{{user}}"
-  with_items: "{{openvpn_clients}}"
+  become_user: "{{ user }}"
+  loop: "{{ openvpn_clients }}"
   tags: client
 
 - name: install all server keys
-  command: install -o root -g root -m 600 {{item.name}} /etc/openvpn/keys/
+  command: install -o root -g root -m 600 {{ item.name }} /etc/openvpn/keys/
   args:
-    chdir: "{{item.path}}"
-    creates: "/etc/openvpn/keys/{{item.name}}"
-  with_items:
+    chdir: "{{ item.path }}"
+    creates: "/etc/openvpn/keys/{{ item.name }}"
+  loop:
     - name: "ca.crt"
-      path: "{{easyrsa_server}}/pki"
-    - name: "{{ansible_hostname}}.crt"
-      path: "{{easyrsa_server}}/pki/issued"
-    - name: "{{ansible_hostname}}.key"
-      path: "{{easyrsa_server}}/pki/private"
+      path: "{{ easyrsa_server }}/pki"
+    - name: "{{ ansible_hostname }}.crt"
+      path: "{{ easyrsa_server }}/pki/issued"
+    - name: "{{ ansible_hostname }}.key"
+      path: "{{ easyrsa_server }}/pki/private"
     - name: "ta.key"
-      path: "{{easyrsa_server}}"
+      path: "{{ easyrsa_server }}"
 
 - name: copy Diffie-Hellman key
   copy:
-    src: "{{openvpn_dh}}"
+    src: "{{ openvpn_dh }}"
     dest: /etc/openvpn/keys/dh.pem
     owner: root
     group: root
@@ -115,7 +115,8 @@
     mode: 0644
   notify: restart openvpn
 
-- name: start openvpn
-  service:
+- name: make sure openvpn is started and enabled
+  systemd:
     name: openvpn
     state: started
+    enabled: true
