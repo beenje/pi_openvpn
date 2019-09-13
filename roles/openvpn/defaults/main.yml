@@ -1,6 +1,6 @@
 ---
 openvpn_server: example.org
-openvpn_port: 1194
+openvpn_port: "1194"
 openvpn_protocol: udp
 
 openvpn_dh: /path/to/dh.pem
