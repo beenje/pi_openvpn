@@ -79,23 +79,27 @@ persist-tun
 # to silence duplicate packet warnings.
 ;mute-replay-warnings
 
-# Verify server certificate by checking
-# that the certicate has the nsCertType
-# field set to "server".  This is an
-# important precaution to protect against
+# Verify server certificate by checking that the
+# certicate has the correct key usage set.
+# This is an important precaution to protect against
 # a potential attack discussed here:
 #  http://openvpn.net/howto.html#mitm
 #
 # To use this feature, you will need to generate
-# your server certificates with the nsCertType
-# field set to "server".  The build-key-server
-# script in the easy-rsa folder will do this.
-#ns-cert-type server
+# your server certificates with the keyUsage set to
+#   digitalSignature, keyEncipherment
+# and the extendedKeyUsage to
+#   serverAuth
+# EasyRSA can do this for you.
+#remote-cert-tls server
 
 # Select a cryptographic cipher.
 # If the cipher option is used on the server
 # then you must also specify it here.
-cipher AES-128-CBC   # AES
+# Note that v2.4 client/server will automatically
+# negotiate AES-256-GCM in TLS mode.
+# See also the ncp-cipher option in the manpage
+cipher AES-256-CBC
 
 # Enable compression on the VPN link.
 # Don't enable this unless it is also
