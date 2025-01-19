@@ -2,7 +2,7 @@
 # handlers file for openvpn
 - name: restart openvpn
   service:
-    name: openvpn
+    name: openvpn-server@tun0
     state: restarted
 
 - name: reload ufw

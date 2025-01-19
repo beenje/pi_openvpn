@@ -106,10 +106,10 @@
     group: root
     mode: 0600
 
-- name: create openvpn server.conf
+- name: create openvpn tun0.conf
   template:
     src: server.conf.j2
-    dest: /etc/openvpn/server.conf
+    dest: /etc/openvpn/server/tun0.conf
     owner: root
     group: root
     mode: 0644
@@ -117,6 +117,6 @@
 
 - name: make sure openvpn is started and enabled
   systemd:
-    name: openvpn
+    name: openvpn-server@tun0
     state: started
     enabled: true
