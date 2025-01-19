@@ -1,5 +1,5 @@
 ##############################################
-# Sample client-side OpenVPN 2.0 config file #
+# Sample client-side OpenVPN 2.6 config file #
 # for connecting to multi-client server.     #
 #                                            #
 # This configuration can be used by multiple #
@@ -80,7 +80,7 @@ persist-tun
 ;mute-replay-warnings
 
 # Verify server certificate by checking that the
-# certicate has the correct key usage set.
+# certificate has the correct key usage set.
 # This is an important precaution to protect against
 # a potential attack discussed here:
 #  http://openvpn.net/howto.html#mitm
@@ -93,18 +93,11 @@ persist-tun
 # EasyRSA can do this for you.
 #remote-cert-tls server
 
-# Select a cryptographic cipher.
-# If the cipher option is used on the server
-# then you must also specify it here.
-# Note that v2.4 client/server will automatically
-# negotiate AES-256-GCM in TLS mode.
-# See also the ncp-cipher option in the manpage
-cipher AES-256-CBC
-
-# Enable compression on the VPN link.
-# Don't enable this unless it is also
-# enabled in the server config file.
-;comp-lzo
+# Allow to connect to really old OpenVPN versions
+# without AEAD support (OpenVPN 2.3.x or older)
+# This adds AES-256-CBC as fallback cipher and
+# keeps the modern ciphers as well.
+;data-ciphers AES-256-GCM:AES-128-GCM:?CHACHA20-POLY1305:AES-256-CBC
 
 # Set log file verbosity.
 verb 3
@@ -112,6 +105,7 @@ verb 3
 # Silence repeating messages
 ;mute 20
 
-# tls-auth
+# tls-auth key will be included below by the clientside script
+# key-direction must be set here
 key-direction 1
 
